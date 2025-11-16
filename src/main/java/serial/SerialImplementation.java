@@ -1,15 +1,31 @@
 package serial;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.net.URISyntaxException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.util.concurrent.TimeoutException;
+
+import shared.Producer;
 
 public class SerialImplementation {
+
+    private final SerialProducer serialMessageProducer;
+
+    public SerialImplementation() throws
+            IOException,
+            URISyntaxException,
+            NoSuchAlgorithmException,
+            KeyManagementException,
+            TimeoutException
+    {
+        Producer messageProducer = new Producer("content_parser");
+        this.serialMessageProducer = new SerialProducer(messageProducer);
+    }
 
     public void run() throws
             IOException
     {
-        String string = Files.readString(Path.of("src/main/java/data/data_100MB"));
-        System.out.println(string);
+        this.serialMessageProducer.produce();
     }
 }
