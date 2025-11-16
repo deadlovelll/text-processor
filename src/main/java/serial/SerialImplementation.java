@@ -24,7 +24,8 @@ public class SerialImplementation {
     }
 
     public void run() throws
-            IOException
+            IOException,
+            TimeoutException
     {
         this.serialMessageProducer.produce();
     }

@@ -3,6 +3,7 @@ package shared;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
+import com.rabbitmq.client.DeliverCallback;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -10,13 +11,12 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.TimeoutException;
 
-public class Producer {
+public class Consumer {
 
     private final String topicName;
     private final Channel channel;
-    private final Connection conn;
 
-    public Producer(String topicName) throws
+    public Consumer(String topicName) throws
             IOException,
             TimeoutException,
             URISyntaxException,
@@ -30,22 +30,20 @@ public class Producer {
 
         this.topicName = topicName;
         this.channel = channel;
-        this.conn = conn;
     }
 
-    public void produceMessage(String message) throws
+    public void consumeMessages() throws
             IOException
     {
-        channel.queueDeclare(topicName, true, false, false, null);
-        byte[] messageBytes = message.getBytes();
-        channel.basicPublish("", topicName, null, messageBytes);
-    }
+        channel.exchangeDeclare(topicName, "fanout");
+        String queueName = channel.queueDeclare().getQueue();
+        channel.queueBind(queueName, topicName, "");
+        System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
 
-    public void closeConnection() throws
-            IOException,
-            TimeoutException
-    {
-        channel.close();
-        conn.close();
+        DeliverCallback deliverCallback = (consumerTag, delivery) -> {
+            String message = new String(delivery.getBody(), "UTF-8");
+            System.out.println(" [x] Received '" + message + "'");
+        };
+        channel.basicConsume(queueName, true, deliverCallback, consumerTag -> {});
     }
 }
