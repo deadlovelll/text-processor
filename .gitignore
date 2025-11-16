@@ -1,4 +1,4 @@
-.gradke
-.idea
-gradle
+.gradle
+.idea/
+.gradle/
 data/
