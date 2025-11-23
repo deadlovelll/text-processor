@@ -1,35 +1,24 @@
-from datetime import datetime, timezone
 import json
 
-from aggregation_consumer.sentiment_getter import SentimentGetter
+from aggregation_consumer.stat_finalizer import StatFinalizer
 
 
 class FileWriter:
     
-    __slots__ = ('_sentiment_getter')
+    __slots__ = ('_stat_finalizer')
     
     def __init__(
         self,
-        sentiment_getter: SentimentGetter = SentimentGetter(),
+        stat_finalizer: StatFinalizer = StatFinalizer(),
     ) -> None:
         
-        self._sentiment_getter = sentiment_getter
+        self._stat_finalizer = stat_finalizer
     
     def write(self, all: int, filepath: str, file_data) -> None:
         print(file_data)
         with open(filepath, 'a') as f:
             if all == 1:
-                sentiment_percent = self._sentiment_getter.get(file_data)
-                current_ts = datetime.now(timezone.utc).isoformat()
-                file_data['stats'].update({
-                    'sentiment': sentiment_percent,
-                    'start_time': file_data['start'],
-                    'end_time': current_ts,
-                    'time_spent': (
-                        datetime.fromisoformat(current_ts) 
-                        - datetime.fromisoformat(file_data['start'])
-                    ).total_seconds()
-                })
+                self._stat_finalizer.finalize(file_data)
             data = {
                 'all': all,
                 'recevied': 1,
