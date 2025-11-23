@@ -16,9 +16,8 @@ class StatFinalizer:
     
     def finalize(self, file_data):
         current_ts = datetime.now(timezone.utc).isoformat()
-        start_time = file_data['start']  
+        start_time = file_data['stats']['start_time']  
         file_data['stats'].update({
-            'start_time': start_time,
             'end_time': current_ts,
             'time_spent': (
                 datetime.fromisoformat(current_ts) 

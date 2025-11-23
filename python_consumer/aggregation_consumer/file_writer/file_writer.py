@@ -21,7 +21,8 @@ class FileWriter:
                 self._stat_finalizer.finalize(file_data)
             data = {
                 'all': all,
-                'recevied': 1,
+                'received': 1,
                 'stats': file_data['stats'],
-            }                
+            }
+            data['stats']['start_time'] = file_data['start']         
             f.write(json.dumps(data))

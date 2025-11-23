@@ -88,6 +88,7 @@ class ParallelConsumer:
             'taskId': decoded_msg['taskId'],
             'all': decoded_msg['all'],
             'stats': merged_result,
+            'start': decoded_msg['start']
         }
         print(f'pre-merged result: {merged_result}')
         await self._message_producer.produce(agg_message, connection)

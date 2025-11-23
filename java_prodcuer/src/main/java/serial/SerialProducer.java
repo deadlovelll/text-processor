@@ -27,11 +27,11 @@ public class SerialProducer {
     {
         String[] pathArray = {
             "data/data_1MB",
-            "data/data_5MB",
-            "data/data_10MB",
-            "data/data_25MB",
-            "data/data_50MB",
-            "data/data_100MB",
+            // "data/data_5MB",
+            // "data/data_10MB",
+            // "data/data_25MB",
+            // "data/data_50MB",
+            // "data/data_100MB",
         };
         for (String path : pathArray) {
             byte[] bytes = Files.readAllBytes(Path.of(path));

@@ -35,6 +35,8 @@ class AggregationConsumer:
     async def consume(self, message: AbstractMessage) -> None:
         print('message received')
         data = json.loads(message.body.decode('utf-8'))
+        top_5 = data['stats']['top_5']
+        data['stats']['top_5'] = [tuple(x) for x in top_5]
         print(data)
         task_id: str = data['taskId']
         all: int = data['all']

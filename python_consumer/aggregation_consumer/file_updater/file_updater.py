@@ -20,11 +20,11 @@ class FileUpdater:
         self._results_merger = results_merger
         self._stat_finalizer = stat_finalizer
     
-    def update(self, filepath: str, stat) -> None:
+    def update(self, filepath: str, data) -> None:
         with open(filepath, 'r+') as f:
             file_data = json.load(f)
             initial_data = file_data['stats']
-            merged_result = self._results_merger.merge(stat, initial_data)
+            merged_result = self._results_merger.merge([data['stats']], initial_data)
             
             file_data['stats'] = merged_result
             file_data['received'] = file_data.get('received', 0) + 1

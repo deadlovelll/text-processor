@@ -37,4 +37,4 @@ ENV PATH=/venv/bin:/home/appuser/.local/bin:$PATH \
 
 COPY --chown=appuser:appuser . .
 
-USER appuser
+# USER appuser
