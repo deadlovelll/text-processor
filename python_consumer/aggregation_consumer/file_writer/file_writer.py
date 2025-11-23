@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 import json
 
 from aggregation_consumer.sentiment_getter import SentimentGetter
@@ -18,8 +19,17 @@ class FileWriter:
         print(file_data)
         with open(filepath, 'a') as f:
             if all == 1:
-                sentiment_percent: str = self._sentiment_getter.get(file_data)
-                file_data['stats']['sentiment'] = sentiment_percent
+                sentiment_percent = self._sentiment_getter.get(file_data)
+                current_ts = datetime.now(timezone.utc).isoformat()
+                file_data['stats'].update({
+                    'sentiment': sentiment_percent,
+                    'start_time': file_data['start'],
+                    'end_time': current_ts,
+                    'time_spent': (
+                        datetime.fromisoformat(current_ts) 
+                        - datetime.fromisoformat(file_data['start'])
+                    ).total_seconds()
+                })
             data = {
                 'all': all,
                 'recevied': 1,

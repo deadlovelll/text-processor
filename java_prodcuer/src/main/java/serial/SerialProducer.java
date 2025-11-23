@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.concurrent.TimeoutException;
 import java.util.UUID;
 import java.util.Arrays;
+import java.time.Instant;
 
 import shared.Producer;
 
@@ -36,6 +37,7 @@ public class SerialProducer {
             byte[] bytes = Files.readAllBytes(Path.of(path));
             int totalSize = bytes.length;
             int partSize = (int) Math.ceil(totalSize / 4.0);
+            String startTime = Instant.now().toString();
             UUID taskId = UUID.randomUUID();
 
             for (int part = 0; part < 4; part++) {
@@ -47,6 +49,7 @@ public class SerialProducer {
                 message.put("taskId", taskId); 
                 message.put("all", 4); 
                 message.put("value", new String(chunk));
+                message.put("start", startTime);
                 this.messageProdcuer.produceMessage(message);
             }
         }
