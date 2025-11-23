@@ -27,11 +27,11 @@ public class SerialProducer {
     {
         String[] pathArray = {
             "data/data_1MB",
-            // "data/data_5MB",
-            // "data/data_10MB",
-            // "data/data_25MB",
-            // "data/data_50MB",
-            // "data/data_100MB",
+            "data/data_5MB",
+            "data/data_10MB",
+            "data/data_25MB",
+            "data/data_50MB",
+            "data/data_100MB",
         };
         for (String path : pathArray) {
             byte[] bytes = Files.readAllBytes(Path.of(path));
@@ -39,6 +39,7 @@ public class SerialProducer {
             int partSize = (int) Math.ceil(totalSize / 4.0);
             String startTime = Instant.now().toString();
             UUID taskId = UUID.randomUUID();
+            System.out.println(path + "" + taskId);
 
             for (int part = 0; part < 4; part++) {
                 int start = part * partSize;

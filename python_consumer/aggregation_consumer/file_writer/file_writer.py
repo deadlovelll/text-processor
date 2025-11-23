@@ -27,7 +27,7 @@ class FileWriter:
         print(file_data)
         with open(filepath, 'a') as f:
             if all == 1:
-                self._stat_finalizer.finalize(file_data)
+                self._stat_finalizer.finalize(file_data, file_data['taskId'])
             data = {
                 'all': all,
                 'received': 1,

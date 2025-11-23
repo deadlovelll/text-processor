@@ -20,6 +20,7 @@ class StatFinalizer:
         file_data: dict[
             str, Union[str,  dict[str, int | list[tuple[str, int]]]]
         ],
+        task_id: str,
     ) -> None:
         
         current_ts: str = datetime.now(timezone.utc).isoformat()
@@ -33,4 +34,4 @@ class StatFinalizer:
         })
         sentiment_percent: str = self._sentiment_getter.get(file_data)
         file_data['stats']['sentiment'] = sentiment_percent
-        print(f'task with id {file_data['taskId']} finished')
+        print(f'task with id {task_id} finished')

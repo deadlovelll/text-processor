@@ -96,7 +96,7 @@ class ParallelConsumer:
         self, 
         loop: AbstractEventLoop, 
         executor: InterpreterPoolExecutor, 
-        data: list,
+        data: list[str],
     ) -> dict[str, int | dict[str, int]]:
         
         result: dict[str, int | dict[str, int]]

@@ -42,7 +42,7 @@ class FileUpdater:
             file_data['received'] = file_data.get('received', 0) + 1
             
             if file_data['received'] == file_data['all']:
-                self._stat_finalizer.finalize(file_data)
+                self._stat_finalizer.finalize(file_data, data['taskId'])
 
             f.seek(0)
             f.truncate()
