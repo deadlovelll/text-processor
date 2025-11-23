@@ -20,6 +20,7 @@ services:
     ports:
       - "8001:8001"
     depends_on:
+      - aggregation_consumer
       - rabbitmq
     environment:
       PYTHONPATH: "./"
@@ -36,6 +37,7 @@ services:
     depends_on:
       - consumer_1
       - rabbitmq
+      - aggregation_consumer
     environment:
       PYTHONPATH: "./"
     volumes:
@@ -51,6 +53,7 @@ services:
     depends_on:
       - consumer_2
       - rabbitmq
+      - aggregation_consumer
     environment:
       PYTHONPATH: "./"
     volumes:
@@ -66,11 +69,26 @@ services:
     depends_on:
       - consumer_3
       - rabbitmq
+      - aggregation_consumer
     environment:
       PYTHONPATH: "./"
     volumes:
       - shared_results:/app/results
     command: ["sh", "-c", "sleep 5 && python parallel_consumer/parallel/parallel.py"]
+
+  aggregation_consumer:
+    build:
+      context: python_consumer
+      dockerfile: Dockerfile
+    ports:
+      - "8005:8005"
+    depends_on:
+      - rabbitmq
+    environment:
+      PYTHONPATH: "./"
+    volumes:
+      - shared_results:/app/results
+    command: ["sh", "-c", "sleep 5 && python aggregation_consumer/aggregation/aggregation.py"]
 
   rabbitmq:
     image: rabbitmq:3.13-management
