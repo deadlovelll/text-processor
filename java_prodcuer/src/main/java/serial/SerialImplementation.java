@@ -19,7 +19,7 @@ public class SerialImplementation {
             KeyManagementException,
             TimeoutException
     {
-        Producer messageProducer = new Producer("content_parse222");
+        Producer messageProducer = new Producer("content_parse2");
         this.serialMessageProducer = new SerialProducer(messageProducer);
     }
 
