@@ -1,4 +1,5 @@
 import json
+from typing import Union
 
 from aggregation_consumer.stat_finalizer import StatFinalizer
 from shared.result_merger import ResultMerger
@@ -20,12 +21,23 @@ class FileUpdater:
         self._results_merger = results_merger
         self._stat_finalizer = stat_finalizer
     
-    def update(self, filepath: str, data) -> None:
+    def update(
+        self, 
+        filepath: str, 
+        data: dict[str, Union[str,  dict[str, int | list[tuple[str, int]]]]],
+    ) -> None:
+        
+        file_data: dict[str, Union[str,  dict[str, int | list[tuple[str, int]]]]]
+        initial_data: dict[str, int | list[tuple[str, int]]]
+        merged_result: dict[str, int | list[tuple[str, int]]]
+        
         with open(filepath, 'r+') as f:
             file_data = json.load(f)
             initial_data = file_data['stats']
-            merged_result = self._results_merger.merge([data['stats']], initial_data)
-            
+            merged_result = self._results_merger.merge(
+                [data['stats']], 
+                initial_data,
+            )
             file_data['stats'] = merged_result
             file_data['received'] = file_data.get('received', 0) + 1
             

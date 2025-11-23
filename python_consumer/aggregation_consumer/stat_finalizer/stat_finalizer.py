@@ -1,4 +1,5 @@
 from datetime import datetime, timezone
+from typing import Union
 
 from aggregation_consumer.sentiment_getter import SentimentGetter
 
@@ -14,9 +15,15 @@ class StatFinalizer:
         
         self._sentiment_getter = sentiment_getter
     
-    def finalize(self, file_data):
-        current_ts = datetime.now(timezone.utc).isoformat()
-        start_time = file_data['stats']['start_time']  
+    def finalize(
+        self, 
+        file_data: dict[
+            str, Union[str,  dict[str, int | list[tuple[str, int]]]]
+        ],
+    ) -> None:
+        
+        current_ts: str = datetime.now(timezone.utc).isoformat()
+        start_time: str = file_data['stats']['start_time']  
         file_data['stats'].update({
             'end_time': current_ts,
             'time_spent': (
@@ -24,6 +31,6 @@ class StatFinalizer:
                 - datetime.fromisoformat(start_time)
             ).total_seconds()
         })
-        sentiment_percent = self._sentiment_getter.get(file_data)
+        sentiment_percent: str = self._sentiment_getter.get(file_data)
         file_data['stats']['sentiment'] = sentiment_percent
         print(f'task with id {file_data['taskId']} finished')

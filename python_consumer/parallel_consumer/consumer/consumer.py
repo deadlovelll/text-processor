@@ -51,6 +51,11 @@ class ParallelConsumer:
         connection: AbstractConnection,
     ) -> None:
         
+        merged_result: dict[str, int | list[tuple]]
+        results: list[dict[str, int | dict[str, int]]]
+        chunks: Generator[list[str], None, None]
+        agg_message: dict[str, int | list[tuple]]
+        
         count: int = self._worker_counter.get() 
         loop: AbstractEventLoop = asyncio.get_running_loop()
         executor: InterpreterPoolExecutor = InterpreterPoolExecutor(
@@ -58,20 +63,13 @@ class ParallelConsumer:
         )
         print('message received')
         tasks: list[Task] = []
-        results: list[dict[str, int | dict[str, int]]] = []
+        results = []
         decoded_msg = json.loads(message.body.decode('utf-8'))
         blocks: list[str] = decoded_msg['value'].split('\n')
-        blocks = [
-            b.split('\t', 1)[1] 
-            if '\t' in b else b 
-            for b in blocks
-        ]
+        blocks = [b.split('\t', 1)[1] if '\t' in b else b  for b in blocks]
         if len(blocks) == 1:
             return
-        chunks: Generator[list[str], None, None] = self._text_splitter.gen(
-            blocks, 
-            count,
-        )
+        chunks = self._text_splitter.gen(blocks, count)
         print('start to process the text')
         async with asyncio.TaskGroup() as tg:
             for chunk in chunks:

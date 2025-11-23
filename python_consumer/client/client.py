@@ -16,6 +16,7 @@ class MessageClient:
         self.address: str = "amqp://guest:guest@rabbitmq:5672"
         
     async def get_connection(self) -> AbstractRobustConnection:
+        connection: AbstractRobustConnection
         connection = await aio_pika.connect_robust(self.address)
         return connection
     
@@ -38,7 +39,6 @@ class MessageClient:
     async def get_exchnage(
         self,
         connection: AbstractRobustConnection,
-        exchange_name: str,
     ) -> AbstractExchange:
         
         channel: AbstractChannel = await connection.channel()

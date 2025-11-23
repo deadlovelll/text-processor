@@ -30,31 +30,31 @@ class MessageProcessor:
         
         text.sort(key=lambda x: len(x))
         
-        result = {
+        result: dict[str, Union[int, list[tuple[str, int]]]] = {
             'word_count': 0,
             'bad_words': 0,
             'names': 0,
             'top_5': [],
         }
-        next_text = []
+        next_text: list[str] = []
         
         for word in tqdm(text):
-            splitted_word = word.split('_')
+            splitted_word: list[str] = word.split('_')
             for subword in splitted_word:
                 if not subword:
                     continue
                 result['word_count'] += 1
-                is_profane = self._profane_detector.is_profane(word)
+                is_profane: bool = self._profane_detector.is_profane(word)
                 if is_profane:
                     result['bad_words'] += 1
-                is_name = self._name_detector.is_name(subword)
+                is_name: bool = self._name_detector.is_name(subword)
                 if is_name:
                     result['names'] += 1
 
                 next_text.append(subword)
                 
-        counter = Counter(next_text)
-        top_5 = counter.most_common(5)
+        counter: Counter = Counter(next_text)
+        top_5: list[tuple[str, int]] = counter.most_common(5)
         result['top_5'] = top_5
         
         return result

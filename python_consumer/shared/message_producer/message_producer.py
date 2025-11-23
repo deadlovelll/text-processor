@@ -2,7 +2,11 @@
 import json
 
 import aio_pika
-from aio_pika.abc import AbstractExchange
+from aio_pika.abc import (
+    AbstractRobustConnection, 
+    AbstractExchange,
+    AbstractMessage,
+)
 
 from client import MessageClient
 
@@ -20,15 +24,14 @@ class MessageProducer:
     
     async def produce(
         self, 
-        data: dict,
-        connection,
+        data: dict[str, int | list[tuple]],
+        connection: AbstractRobustConnection,
     ) -> None:
         
         exchange: AbstractExchange = await self._client.get_exchnage(
             connection,
-            "message_exchange",
         )
-        message = aio_pika.Message(
+        message: AbstractMessage = aio_pika.Message(
             body=json.dumps(data).encode("utf-8")
         )
         await exchange.publish(message, routing_key="message_exchange")

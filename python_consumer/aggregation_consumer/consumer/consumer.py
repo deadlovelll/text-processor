@@ -1,5 +1,6 @@
 from asyncio import Lock
 import json
+from typing import Union
 from pathlib import Path
 
 from client import MessageClient
@@ -33,16 +34,20 @@ class AggregationConsumer:
         self._file_updater = file_updater
     
     async def consume(self, message: AbstractMessage) -> None:
+        data: dict[str, Union[str,  dict[str, int | list[tuple]]]]
+        top_5: list[tuple[str, int]]
+        
         print('message received')
+        
         data = json.loads(message.body.decode('utf-8'))
         top_5 = data['stats']['top_5']
         data['stats']['top_5'] = [tuple(x) for x in top_5]
-        print(data)
+                
         task_id: str = data['taskId']
         all: int = data['all']
         filepath: str = f"results/{task_id}.json"
         file: Path = Path(filepath)
-        lock = Lock()
+        lock: Lock = Lock()
         
         print(f'task id is {task_id}')
             

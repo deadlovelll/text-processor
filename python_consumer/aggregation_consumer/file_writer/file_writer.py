@@ -1,4 +1,5 @@
 import json
+from typing import Union
 
 from aggregation_consumer.stat_finalizer import StatFinalizer
 
@@ -14,7 +15,15 @@ class FileWriter:
         
         self._stat_finalizer = stat_finalizer
     
-    def write(self, all: int, filepath: str, file_data) -> None:
+    def write(
+        self, 
+        all: int, 
+        filepath: str, 
+        file_data: dict[
+            str, Union[str,  dict[str, int | list[tuple[str, int]]]]
+        ],
+    ) -> None:
+        
         print(file_data)
         with open(filepath, 'a') as f:
             if all == 1:
