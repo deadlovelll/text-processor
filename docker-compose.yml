@@ -8,7 +8,7 @@ services:
     depends_on:
       - consumer_1
       - rabbitmq
-    command: ["sh", "-c", "sleep 5 && java -Xmx1g -jar app.jar"]
+    command: ["sh", "-c", "sleep 10 && java -Xmx1g -jar app.jar"]
 
   consumer_1:
     build:
@@ -23,7 +23,7 @@ services:
       PYTHONPATH: "./"
     volumes:
       - shared_results:/app/results
-    command: ["sh", "-c", "sleep 5 && python parallel_consumer/parallel/parallel.py"]
+    command: ["sh", "-c", "sleep 10 && python parallel_consumer/parallel/parallel.py"]
   
   consumer_2:
     build:
@@ -39,7 +39,7 @@ services:
       PYTHONPATH: "./"
     volumes:
       - shared_results:/app/results
-    command: ["sh", "-c", "sleep 5 && python parallel_consumer/parallel/parallel.py"]
+    command: ["sh", "-c", "sleep 10 && python parallel_consumer/parallel/parallel.py"]
 
   consumer_3:
     build:
@@ -55,7 +55,7 @@ services:
       PYTHONPATH: "./"
     volumes:
       - shared_results:/app/results
-    command: ["sh", "-c", "sleep 5 && python parallel_consumer/parallel/parallel.py"]
+    command: ["sh", "-c", "sleep 10 && python parallel_consumer/parallel/parallel.py"]
 
   consumer_4:
     build:
@@ -71,7 +71,7 @@ services:
       PYTHONPATH: "./"
     volumes:
       - shared_results:/app/results
-    command: ["sh", "-c", "sleep 5 && python parallel_consumer/parallel/parallel.py"]
+    command: ["sh", "-c", "sleep 10 && python parallel_consumer/parallel/parallel.py"]
 
   aggregation_consumer:
     build:
@@ -85,7 +85,7 @@ services:
       PYTHONPATH: "./"
     volumes:
       - shared_results:/app/results
-    command: ["sh", "-c", "sleep 5 && python aggregation_consumer/aggregation/aggregation.py"]
+    command: ["sh", "-c", "sleep 10 && python aggregation_consumer/aggregation/aggregation.py"]
 
   rabbitmq:
     image: rabbitmq:3.13-management
